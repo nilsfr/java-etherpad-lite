@@ -1,0 +1,5 @@
+A Java client for Etherpad Lite’s HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation.
+
+See github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read github.com/Pita/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite’s HTTP API.
+
+NOTE This is beta-quality software, and is still under heavy development.
