@@ -4,6 +4,8 @@ See github.com/Pita/etherpad-lite for information on how to install and configur
 
 NOTE This is beta-quality software, and is still under heavy development.
 
+NOTE This targets version 1.1 of Etherpad Lite, which is not yet released. It is mostly incompatible with version 1.0.
+
 Read the full docs at http://jordanhollinger.com/docs/java-etherpad-lite/.
 
 Example:
