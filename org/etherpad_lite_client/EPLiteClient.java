@@ -8,7 +8,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import org.json.*;
 
+/**
+ * A client for talking to Etherpad Lite's HTTP JSON API.<br />
+ * <br />
+ * Example:<br />
+ * <br />
+ * <code>
+ * EPLiteClient api = new EPLiteClient("http://etherpad.mysite.com", "FJ7jksalksdfj83jsdflkj");<br />
+ * HashMap pad = api.getText("my_pad");<br />
+ * String pad = pad.get("text").toString();
+ * </code>
+ */
 public class EPLiteClient {
+    /**
+     * The Etherpad Lite API version this client targets
+     */
     public static final int API_VERSION = 1;
 
     public static final int CODE_OK = 0;
@@ -17,8 +31,14 @@ public class EPLiteClient {
     public static final int CODE_INVALID_METHOD = 3;
     public static final int CODE_INVALID_API_KEY = 4;
 
+    /**
+     * The url of the API
+     */
     public URI uri;
 
+    /**
+     * The API key
+     */
     public String apiKey;
 
     /**

@@ -3,3 +3,11 @@ A Java client for Etherpad Lite’s HTTP JSON API. Etherpad Lite is a collaborat
 See github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read github.com/Pita/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite’s HTTP API.
 
 NOTE This is beta-quality software, and is still under heavy development.
+
+Read the full docs at http://jordanhollinger.com/docs/java-etherpad-lite/.
+
+Example:
+
+EPLiteClient api = new EPLiteClient("http://etherpad.mysite.com", "FJ7jksalksdfj83jsdflkj");
+HashMap pad = api.getText("my_pad");
+String pad = pad.get("text").toString(); 

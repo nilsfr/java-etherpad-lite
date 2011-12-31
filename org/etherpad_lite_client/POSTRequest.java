@@ -6,9 +6,27 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+/**
+ * A class for easily executing an HTTP POST request.<br />
+ * <br />
+ * Example:<br />
+ * <br />
+ * <code>
+ * Request req = new POSTRequest(url_object);<br />
+ * String resp = req.send();<br />
+ * </code>
+ */
 public class POSTRequest implements Request {
+    /**
+     * The URL object.
+     */
     private URL url;
 
+    /**
+     * Instantiates a new POSTRequest.
+     * 
+     * @param url the URL object
+     */
     private String args;
 
     public POSTRequest(URL url, String args) {
@@ -16,6 +34,11 @@ public class POSTRequest implements Request {
         this.args = args;
     }
 
+    /**
+     * Sends the request and returns the response.
+     * 
+     * @return String
+     */
     public String send() throws Exception {
         URLConnection con = this.url.openConnection();
         con.setDoOutput(true);
