@@ -26,7 +26,6 @@ public class EPLiteClient {
      *
      * @param url an absolute url, including protocol, to the EPL api
      * @param apiKey the API Key
-     * @return EPLiteClient
      */
     public EPLiteClient(String url, String apiKey) {
         this.uri = URI.create(url);
@@ -62,7 +61,6 @@ public class EPLiteClient {
      * Delete group.
      *
      * @param groupID string
-     * @return void
      */
     public void deleteGroup(String groupID) {
         HashMap args = new HashMap();
@@ -87,7 +85,6 @@ public class EPLiteClient {
      * 
      * @param groupID string
      * @param padName string
-     * @return HashMap
      */
     public void createGroupPad(String groupID, String padName) {
         HashMap args = new HashMap();
@@ -102,7 +99,6 @@ public class EPLiteClient {
      * @param groupID string
      * @param padName string
      * @param text string
-     * @return HashMap
      */
     public void createGroupPad(String groupID, String padName, String text) {
         HashMap args = new HashMap();
@@ -205,7 +201,6 @@ public class EPLiteClient {
      * Delete a session.
      * 
      * @param sessionID string
-     * @return void
      */
     public void deleteSession(String sessionID) {
         HashMap args = new HashMap();
@@ -242,7 +237,7 @@ public class EPLiteClient {
      * List all the sessions IDs belonging to an author. Returned as a HashMap of sessionIDs keys, with values of HashMaps containing
      * groupID, authorID, and validUntil.
      * 
-     * @param groupID string
+     * @param authorID string
      * @return HashMap
      */
     public HashMap listSessionsOfAuthor(String authorID) {
@@ -286,7 +281,6 @@ public class EPLiteClient {
      * 
      * @param padId the pad's id string
      * @param text the pad's new text
-     * @return void
      */
     public void setText(String padId, String text) {
         HashMap args = new HashMap();
@@ -328,7 +322,6 @@ public class EPLiteClient {
      * 
      * @param padId the pad's id string
      * @param html the pad's new html text
-     * @return void
      */
     public void setHTML(String padId, String html) {
         HashMap args = new HashMap();
@@ -345,7 +338,6 @@ public class EPLiteClient {
      * Create a new pad.
      * 
      * @param padId the pad's id string
-     * @return void
      */
     public void createPad(String padId) {
         HashMap args = new HashMap();
@@ -358,7 +350,6 @@ public class EPLiteClient {
      * 
      * @param padId the pad's id string
      * @param text the initial text string
-     * @return void
      */
     public void createPad(String padId, String text) {
         HashMap args = new HashMap();
@@ -383,7 +374,6 @@ public class EPLiteClient {
      * Deletes a pad.
      * 
      * @param padId the pad's id string
-     * @return void
      */
     public void deletePad(String padId) {
         HashMap args = new HashMap();
@@ -407,7 +397,6 @@ public class EPLiteClient {
      * Delete's a pad.
      * 
      * @param padId the pad's id string
-     * @return void
      */
     public void deletePad(String padId, String text) {
         HashMap args = new HashMap();
@@ -421,7 +410,6 @@ public class EPLiteClient {
      * 
      * @param padId the pad's id string
      * @param publicStatus boolean
-     * @return void
      */
     public void setPublicStatus(String padId, Boolean publicStatus) {
         HashMap args = new HashMap();
@@ -448,7 +436,6 @@ public class EPLiteClient {
      * 
      * @param padId the pad's id string
      * @param password string
-     * @return void
      */
     public void setPassword(String padId, String password) {
         HashMap args = new HashMap();

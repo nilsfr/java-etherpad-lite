@@ -14,7 +14,6 @@ public class JSONResponse {
      * Creates a new JSON Response object.
      * 
      * @param jsonString a valid JSON string
-     * @return HashMap
      */
     public JSONResponse(String jsonString) {
         this.jsonString = jsonString;
