@@ -80,6 +80,10 @@ public class JSONResponse {
             else if (strVal.matches("\\d+")) {
                 map.put(key, Integer.parseInt(strVal));
             }
+            // A boolean
+            else if (strVal.matches("(true)|(false)")) {
+                map.put(key, Boolean.parseBoolean(strVal));
+            }
             // Assume it's a string
             else {
                 map.put(key, strVal);
