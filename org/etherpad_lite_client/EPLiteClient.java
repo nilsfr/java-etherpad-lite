@@ -196,6 +196,18 @@ public class EPLiteClient {
         return this.post("createAuthorIfNotExistsFor", args);
     }
 
+    /**
+     * List the ids of pads the author has edited. They will be in an array inside "padIDs".
+     * 
+     * @param authorId the authors's id string
+     * @return HashMap
+     */
+    public HashMap listPadsOfAuthor(String authorId) {
+        HashMap args = new HashMap();
+        args.put("authorID", authorId);
+        return this.get("listPadsOfAuthor", args);
+    }
+
     // Sessions
     // Sessions can be created between a group and an author. This allows an author to access more than one group. The sessionID will be set as a
     // cookie to the client and is valid until a certain date. Only users with a valid session for this group, can access group pads. You can create a
@@ -452,6 +464,18 @@ public class EPLiteClient {
     }
 
     /**
+     * List the ids of authors who have edited a pad. They will be in an array inside "authorIDs".
+     * 
+     * @param padId the pad's id string
+     * @return HashMap
+     */
+    public HashMap listAuthorsOfPad(String padId) {
+        HashMap args = new HashMap();
+        args.put("padID", padId);
+        return this.get("listAuthorsOfPad", args);
+    }
+
+    /**
      * Deletes a pad.
      * 
      * @param padId the pad's id string
@@ -472,6 +496,31 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         return this.get("getReadOnlyID", args);
+    }
+
+    /**
+     * Get the pad's last edit date as a Unix timestamp. The timestamp will be in "lastEdited".
+     * 
+     * @param padId the pad's id string
+     * @return HashMap
+     */
+    public HashMap getLastEdited(String padId) {
+        HashMap args = new HashMap();
+        args.put("padID", padId);
+        return this.get("getLastEdited", args);
+    }
+
+    /**
+     * Get the number of users currently editing a pad.
+     * 
+     * @param padId the pad's id string
+     * @return Integer
+     */
+    public Integer padUsersCount(String padId) {
+        HashMap args = new HashMap();
+        args.put("padID", padId);
+        String userCount = this.get("padUsersCount", args).get("padUsersCount").toString();
+        return Integer.parseInt(userCount);
     }
 
     /**
