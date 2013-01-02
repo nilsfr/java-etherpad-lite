@@ -39,7 +39,7 @@ public class EPLiteClient {
     /**
      * The Etherpad Lite API version this client targets
      */
-    public static final int API_VERSION = 1;
+    public static final float API_VERSION = 1.2f;
 
     public static final int CODE_OK = 0;
     public static final int CODE_INVALID_PARAMETERS = 1;
@@ -143,6 +143,15 @@ public class EPLiteClient {
         args.put("text", text);
         this.post("createGroupPad", args);
     }
+    
+    /**
+     * Lists all existing groups. The group ids are returned in "groupIDs".
+     * 
+     * @return HashMap
+     */
+    public HashMap listAllGroups() {
+    	return this.post("listAllGroups");
+    }
 
     // Authors
     // These authors are bound to the attributes the users choose (color and name). The author id is returned in "authorID".
@@ -206,6 +215,18 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("authorID", authorId);
         return this.get("listPadsOfAuthor", args);
+    }
+    
+    /**
+     * Returns the Author Name of the author.
+     * 
+     * @param authorId the author's id string
+     * @return String
+     */
+    public String getAuthorName(String authorId) {
+    	HashMap args = new HashMap();
+    	args.put("authorID", authorId);
+    	return this.get("getAuthorName", args).toString();
     }
 
     // Sessions
@@ -522,6 +543,19 @@ public class EPLiteClient {
         String userCount = this.get("padUsersCount", args).get("padUsersCount").toString();
         return Integer.parseInt(userCount);
     }
+    
+    /**
+     * Returns the list of users that are currently editing this pad.
+     * A padUser has the values: "colorId", "name" and "timestamp".
+     * 
+     * @param padId
+     * @return HashMap
+     */
+    public HashMap padUsers(String padId) {
+    	HashMap args = new HashMap();
+        args.put("padID", padId);
+        return this.get("padUsers", args);
+    }
 
     /**
      * Sets the pad's public status.
@@ -586,6 +620,19 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         return this.get("isPasswordProtected", args);
+    }
+    
+    /**
+     * Sends a custom message of type msg to the pad.
+     * 
+     * @param padId
+     * @param msg
+     */
+    public void sendClientsMessage(String padId, String msg) {
+        HashMap args = new HashMap();
+        args.put("padID", padId);
+        args.put("msg", msg);
+        this.post("sendClientsMessage", args);
     }
 
     /**
