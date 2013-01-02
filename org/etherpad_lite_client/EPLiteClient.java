@@ -39,7 +39,7 @@ public class EPLiteClient {
     /**
      * The Etherpad Lite API version this client targets
      */
-    public static final float API_VERSION = 1.2f;
+    public static final float API_VERSION = 1.1f;
 
     public static final int CODE_OK = 0;
     public static final int CODE_INVALID_PARAMETERS = 1;
