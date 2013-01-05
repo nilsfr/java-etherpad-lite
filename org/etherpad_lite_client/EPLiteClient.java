@@ -150,7 +150,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listAllGroups() {
-    	return this.post("listAllGroups");
+    	return this.get("listAllGroups");
     }
 
     // Authors
