@@ -22,6 +22,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.json.*;
 
 /**
@@ -666,6 +674,8 @@ public class EPLiteClient {
                 }
             }
         }
+        
+        trustServerAndCertificate();
 
         // Execute the API call
         String path = this.uri.getPath() + "/" + API_VERSION + "/" + apiMethod;
@@ -694,6 +704,43 @@ public class EPLiteClient {
             throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
         }
     }
+    
+    /**
+     * Creates a trust manager to trust all certificates if you open a ssl connection
+     */
+	private void trustServerAndCertificate() {
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+		
+				public void checkClientTrusted(
+						java.security.cert.X509Certificate[] certs, String authType) {
+				}
+		
+				public void checkServerTrusted(
+						java.security.cert.X509Certificate[] certs, String authType) {
+				}
+			}
+		};
+
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		}
+
+		HostnameVerifier hv = new HostnameVerifier() {
+			@Override
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		};
+		HttpsURLConnection.setDefaultHostnameVerifier(hv);
+	}
 
     /**
      * Converts the API resonse's JSON string into a HashMap.
