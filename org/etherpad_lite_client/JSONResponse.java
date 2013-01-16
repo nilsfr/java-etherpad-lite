@@ -76,9 +76,9 @@ public class JSONResponse {
             else if (strVal.matches("\\[.+")) {
                 map.put(key, this.getArray(strVal));
             }
-            // An int
+            // A long
             else if (strVal.matches("\\d+")) {
-                map.put(key, Integer.parseInt(strVal));
+                map.put(key, Long.valueOf(strVal));
             }
             // A boolean
             else if (strVal.matches("(true)|(false)")) {
