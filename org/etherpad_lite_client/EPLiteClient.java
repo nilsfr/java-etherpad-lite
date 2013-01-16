@@ -122,11 +122,11 @@ public class EPLiteClient {
      * @param groupID string
      * @param padName string
      */
-    public void createGroupPad(String groupID, String padName) {
+    public HashMap createGroupPad(String groupID, String padName) {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
         args.put("padName", padName);
-        this.post("createGroupPad", args);
+        return this.post("createGroupPad", args);
     }
 
     /**
