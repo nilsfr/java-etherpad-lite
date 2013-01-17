@@ -1,9 +1,9 @@
 A Java client for Etherpad Lite’s HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation.
 
-See https://github.com/ether/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read https://github.com/ether/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite’s HTTP API.
+See https://github.com/ether/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read http://etherpad.org/doc/v1.2.0/ for an in-depth description of Etherpad Lite’s HTTP API.
 
 DOCUMENTATION
-For now, the best "documentation" is reading through the methods available in the EPLiteClient class: https://raw.github.com/jhollinger/java-etherpad-lite/master/org/etherpad_lite_client/EPLiteClient.java
+For now, the best "documentation" is reading through the methods available in the EPLiteClient class: https://raw.github.com/jhollinger/java-etherpad-lite/master/org/etherpad_lite_client/EPLiteClient.java. The methods are 1:1 with the EPLite API methods.
 
 DOWNLOADS
 You may download pre-compiled .jar files from http://jordanhollinger.com/etherpad-lite-java-client
