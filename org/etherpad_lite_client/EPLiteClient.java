@@ -725,7 +725,7 @@ public class EPLiteClient {
         trustServerAndCertificate();
 
         // Execute the API call
-        String path = this.uri.getPath() + "/" + API_VERSION + "/" + apiMethod;
+        String path = this.uri.getPath() + "/api/" + API_VERSION + "/" + apiMethod;
         URL url;
         Request request;
         try {
