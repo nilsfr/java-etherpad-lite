@@ -11,7 +11,7 @@ You may download pre-compiled .jar files from http://jordanhollinger.com/etherpa
 NOTES
 This is beta-quality software.
 
-This targets version 1.2 of Etherpad Lite (API version 1.1). It is mostly incompatible with version 1.0.
+HEAD currently this targets Etherpad Lite API v1.2. The plan is to keep up with the most recent version of the Etherpad Lite API. (Note that we're talking about API versions here, not release versions).
 
 EXAMPLES
 
