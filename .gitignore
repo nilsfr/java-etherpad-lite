@@ -1,4 +1,6 @@
-org/**/*.class
+src/org/**/*.class
+test/*.class
+test/*.jar
 *.ipr
 *.iws
 *.iml

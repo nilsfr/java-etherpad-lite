@@ -1,0 +1,17 @@
+#!/bin/sh
+
+test_server="$1"
+test_api_key="$2"
+
+# Compile etherpad_lite_client.jar
+cd `dirname $0`/../src
+javac org/etherpad_lite_client/*.java org/json/*.java
+jar cf etherpad_lite_client.jar org/etherpad_lite_client/*.class org/json/*.class
+mv etherpad_lite_client.jar ../test
+
+# Compile test program
+cd ../test
+javac -classpath ./:etherpad_lite_client.jar EPLiteTest.java
+
+# Run tests
+java -classpath ./:etherpad_lite_client.jar EPLiteTest "$test_server" "$test_api_key"
