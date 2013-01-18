@@ -1,11 +1,1 @@
-# Compile etherpad_lite_client.jar under src/
-cd ../src/
-javac org/etherpad_lite_client/*.java org/json/*.java
-jar cf etherpad_lite_client.jar org/etherpad_lite_client/*.class org/json/*.class
-
-# Compile test program
-cd ../test/
-javac -classpath ../src/etherpad_lite_client.jar EPLiteTest.java
-
-# Run
-./test http://localhost:9001 API_KEY
+The test script will compile everything and run the tests.
