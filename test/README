@@ -1,1 +1,5 @@
-The test script will compile everything and run the tests.
+The test script will compile everything and run the tests. Pass the test url and api key.
+
+EXAMPLE
+
+./test http://localhost:9001 Akkjlasdf8924jasdjja8
