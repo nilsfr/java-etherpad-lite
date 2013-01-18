@@ -76,7 +76,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap get(String apiMethod) {
-      return this.call(apiMethod, new HashMap(), "GET");
+        return this.get(apiMethod, new HashMap());
     }
 
     /**
@@ -87,7 +87,11 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap get(String apiMethod, HashMap apiArgs) {
-      return this.call(apiMethod, apiArgs, "GET");
+        String path = this.apiPath(apiMethod);
+        String query = this.queryString(apiArgs);
+        URL url = apiUrl(path, query);
+        Request request = new GETRequest(url);
+        return this.call(request);
     }
 
     /**
@@ -97,7 +101,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap post(String apiMethod) {
-      return this.call(apiMethod, new HashMap(), "POST");
+        return this.post(apiMethod, new HashMap());
     }
 
     /**
@@ -108,54 +112,25 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap post(String apiMethod, HashMap apiArgs) {
-      return this.call(apiMethod, apiArgs, "POST");
+        String path = this.apiPath(apiMethod);
+        String query = this.queryString(apiArgs);
+        URL url = apiUrl(path, null);
+        Request request = new POSTRequest(url, query);
+        return this.call(request);
     }
 
     /**
      * Calls the HTTP JSON API.
      * 
-     * @param apiMethod the name of the API method to call
-     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @param httpMethod the HTTP method to use ("GET" or "POST")
+     * @param request the request object to send
      * @return HashMap
      */
-    private HashMap call(String apiMethod, HashMap apiArgs, String httpMethod) {
-        // Build the url params
-        String strArgs = "";
-        apiArgs.put("apikey", this.apiKey);
-        Iterator i = apiArgs.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry e = (Map.Entry)i.next();
-            Object value = e.getValue();
-            if (value != null) {
-                strArgs += e.getKey() + "=" + value;
-                if (i.hasNext()) {
-                  strArgs += "&";
-                }
-            }
-        }
-        
+    private HashMap call(Request request) {
         trustServerAndCertificate();
 
-        // Execute the API call
-        String path = this.uri.getPath() + "/api/" + this.apiVersion + "/" + apiMethod;
-        URL url;
-        Request request;
         try {
-            // A read (get) request
-            if (httpMethod == "GET") {
-                url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, strArgs, null).toString());
-                request = new GETRequest(url);
-            }
-            // A write (post) request
-            else if (httpMethod == "POST") {
-                url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, null, null).toString());
-                request = new POSTRequest(url, strArgs);
-            }
-            else {
-                throw new EPLiteException(httpMethod + " is not a valid HTTP method");
-            }
-            return this.handleResponse(request.send());
+            String response = request.send();
+            return this.handleResponse(response);
         }
         catch (EPLiteException e) {
             throw new EPLiteException(e.getMessage());
@@ -200,6 +175,55 @@ public class EPLiteConnection {
             System.err.println("Unable to parse JSON response (" + jsonString + "): " + e.getMessage());
             return new HashMap();
         }
+    }
+
+    /**
+     * Returns the URL for the api path and query.
+     *
+     * @param path the api path
+     * @param query the query string (may be null)
+     * @return URL
+     */
+    private URL apiUrl(String path, String query) {
+        try {
+            URL url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, query, null).toString());
+            return url;
+        } catch (Exception e) {
+            throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
+        }
+    }
+
+    /**
+     * Returns a URI path for the API method
+     *
+     * @param apiMethod the api method
+     * @return String
+     */
+    private String apiPath(String apiMethod) {
+        return this.uri.getPath() + "/api/" + this.apiVersion + "/" + apiMethod;
+    }
+
+    /**
+     * Returns a query string made from HashMap keys and values
+     *
+     * @param apiArgs the api arguments in a HashMap
+     * @return String
+     */
+    private String queryString(HashMap apiArgs) {
+        String strArgs = "";
+        apiArgs.put("apikey", this.apiKey);
+        Iterator i = apiArgs.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry e = (Map.Entry)i.next();
+            Object value = e.getValue();
+            if (value != null) {
+                strArgs += e.getKey() + "=" + value;
+                if (i.hasNext()) {
+                  strArgs += "&";
+                }
+            }
+        }
+        return strArgs;
     }
 
     /**
