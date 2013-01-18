@@ -1,3 +1,9 @@
+** RELEASE 1.2.0 (?) **
+
+* Add an optional third constructor argument for the api version
+* Refactoring
+* Added tests
+
 ** RELEASE 1.1.0 (2013-01-17) **
 
 * Don't require that "/api" be passed to the EPLiteClient constructor

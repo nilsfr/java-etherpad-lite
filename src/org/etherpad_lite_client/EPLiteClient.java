@@ -16,21 +16,8 @@
 
 package org.etherpad_lite_client;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.json.*;
 
 /**
  * A client for talking to Etherpad Lite's HTTP JSON API.<br />
@@ -45,35 +32,36 @@ import org.json.*;
  */
 public class EPLiteClient {
     /**
-     * The Etherpad Lite API version this client targets
+     * The Etherpad Lite API version this client targets by default
      */
-    public static final float API_VERSION = 1.2f;
-
-    public static final int CODE_OK = 0;
-    public static final int CODE_INVALID_PARAMETERS = 1;
-    public static final int CODE_INTERNAL_ERROR = 2;
-    public static final int CODE_INVALID_METHOD = 3;
-    public static final int CODE_INVALID_API_KEY = 4;
+    public static final String DEFAULT_API_VERSION = "1.2";
 
     /**
-     * The url of the API
+     * The connection object
      */
-    public URI uri;
-
-    /**
-     * The API key
-     */
-    public String apiKey;
+    public EPLiteConnection connection;
 
     /**
      * Initializes a new org.etherpad_lite_client.EPLiteClient object.
+     * The default Etherpad Lite API version (in DEFAULT_API_VERSION) will be used.
      *
      * @param url an absolute url, including protocol, to the EPL api
      * @param apiKey the API Key
      */
     public EPLiteClient(String url, String apiKey) {
-        this.uri = URI.create(url);
-        this.apiKey = apiKey;
+        this.connection = new EPLiteConnection(url, apiKey, DEFAULT_API_VERSION);
+    }
+
+    /**
+     * Initializes a new org.etherpad_lite_client.EPLiteClient object.
+     * The specified Etherpad Lite API version will be used.
+     *
+     * @param url an absolute url, including protocol, to the EPL api
+     * @param apiKey the API Key
+     * @param apiVersion the API version
+     */
+    public EPLiteClient(String url, String apiKey, String apiVersion) {
+        this.connection = new EPLiteConnection(url, apiKey, apiVersion);
     }
 
     // Groups
@@ -85,7 +73,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createGroup() {
-        return this.post("createGroup");
+        return this.connection.post("createGroup");
     }
 
     /**
@@ -98,7 +86,7 @@ public class EPLiteClient {
     public HashMap createGroupIfNotExistsFor(String groupMapper) {
         HashMap args = new HashMap();
         args.put("groupMapper", groupMapper);
-        return this.post("createGroupIfNotExistsFor", args);
+        return this.connection.post("createGroupIfNotExistsFor", args);
     }
 
     /**
@@ -109,7 +97,7 @@ public class EPLiteClient {
     public void deleteGroup(String groupID) {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
-        this.post("deleteGroup", args);
+        this.connection.post("deleteGroup", args);
     }
 
     /**
@@ -121,7 +109,7 @@ public class EPLiteClient {
     public HashMap listPads(String groupID) {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
-        return this.get("listPads", args);
+        return this.connection.get("listPads", args);
     }
 
     /**
@@ -134,7 +122,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
         args.put("padName", padName);
-        return this.post("createGroupPad", args);
+        return this.connection.post("createGroupPad", args);
     }
 
     /**
@@ -149,7 +137,7 @@ public class EPLiteClient {
         args.put("groupID", groupID);
         args.put("padName", padName);
         args.put("text", text);
-        this.post("createGroupPad", args);
+        this.connection.post("createGroupPad", args);
     }
     
     /**
@@ -158,7 +146,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listAllGroups() {
-    	return this.get("listAllGroups");
+    	return this.connection.get("listAllGroups");
     }
 
     // Authors
@@ -170,7 +158,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createAuthor() {
-        return this.post("createAuthor");
+        return this.connection.post("createAuthor");
     }
 
     /**
@@ -182,7 +170,7 @@ public class EPLiteClient {
     public HashMap createAuthor(String name) {
         HashMap args = new HashMap();
         args.put("name", name);
-        return this.post("createAuthor", args);
+        return this.connection.post("createAuthor", args);
     }
 
     /**
@@ -195,7 +183,7 @@ public class EPLiteClient {
     public HashMap createAuthorIfNotExistsFor(String authorMapper) {
         HashMap args = new HashMap();
         args.put("authorMapper", authorMapper);
-        return this.post("createAuthorIfNotExistsFor", args);
+        return this.connection.post("createAuthorIfNotExistsFor", args);
     }
 
     /**
@@ -210,7 +198,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("authorMapper", authorMapper);
         args.put("name", name);
-        return this.post("createAuthorIfNotExistsFor", args);
+        return this.connection.post("createAuthorIfNotExistsFor", args);
     }
 
     /**
@@ -222,7 +210,7 @@ public class EPLiteClient {
     public HashMap listPadsOfAuthor(String authorId) {
         HashMap args = new HashMap();
         args.put("authorID", authorId);
-        return this.get("listPadsOfAuthor", args);
+        return this.connection.get("listPadsOfAuthor", args);
     }
     
     /**
@@ -234,7 +222,7 @@ public class EPLiteClient {
     public String getAuthorName(String authorId) {
     	HashMap args = new HashMap();
     	args.put("authorID", authorId);
-    	return this.get("getAuthorName", args).toString();
+    	return this.connection.get("getAuthorName", args).toString();
     }
 
     // Sessions
@@ -267,7 +255,7 @@ public class EPLiteClient {
         args.put("groupID", groupID);
         args.put("authorID", authorID);
         args.put("validUntil", validUntil);
-        return this.post("createSession", args);
+        return this.connection.post("createSession", args);
     }
 
     /**
@@ -327,7 +315,7 @@ public class EPLiteClient {
     public void deleteSession(String sessionID) {
         HashMap args = new HashMap();
         args.put("sessionID", sessionID);
-        this.post("deleteSession", args);
+        this.connection.post("deleteSession", args);
     }
 
     /**
@@ -339,7 +327,7 @@ public class EPLiteClient {
     public HashMap getSessionInfo(String sessionID) {
         HashMap args = new HashMap();
         args.put("sessionID", sessionID);
-        return this.get("getSessionInfo", args);
+        return this.connection.get("getSessionInfo", args);
     }
 
     /**
@@ -352,7 +340,7 @@ public class EPLiteClient {
     public HashMap listSessionsOfGroup(String groupID) {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
-        return this.get("listSessionsOfGroup", args);
+        return this.connection.get("listSessionsOfGroup", args);
     }
 
     /**
@@ -365,7 +353,7 @@ public class EPLiteClient {
     public HashMap listSessionsOfAuthor(String authorID) {
         HashMap args = new HashMap();
         args.put("authorID", authorID);
-        return this.get("listSessionsOfAuthor", args);
+        return this.connection.get("listSessionsOfAuthor", args);
     }
 
     // Pad content
@@ -380,7 +368,7 @@ public class EPLiteClient {
     public HashMap getText(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getText", args);
+        return this.connection.get("getText", args);
     }
 
     /**
@@ -395,7 +383,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("rev", new Integer(rev));
-        return this.get("getText", args);
+        return this.connection.get("getText", args);
     }
 
     /**
@@ -408,7 +396,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("text", text);
-        this.post("setText", args);
+        this.connection.post("setText", args);
     }
 
     /**
@@ -421,7 +409,7 @@ public class EPLiteClient {
     public HashMap getHTML(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getHTML", args);
+        return this.connection.get("getHTML", args);
     }
 
     /**
@@ -436,7 +424,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("rev", new Integer(rev));
-        return this.get("getHTML", args);
+        return this.connection.get("getHTML", args);
     }
 
     /**
@@ -449,7 +437,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("html", html);
-        this.post("setHTML", args);
+        this.connection.post("setHTML", args);
     }
 
     // Pads
@@ -464,7 +452,7 @@ public class EPLiteClient {
     public void createPad(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        this.post("createPad", args);
+        this.connection.post("createPad", args);
     }
 
     /**
@@ -477,7 +465,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("text", text);
-        this.post("createPad", args);
+        this.connection.post("createPad", args);
     }
 
     /**
@@ -489,7 +477,7 @@ public class EPLiteClient {
     public HashMap getRevisionsCount(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getRevisionsCount", args);
+        return this.connection.get("getRevisionsCount", args);
     }
 
     /**
@@ -501,7 +489,7 @@ public class EPLiteClient {
     public HashMap listAuthorsOfPad(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("listAuthorsOfPad", args);
+        return this.connection.get("listAuthorsOfPad", args);
     }
 
     /**
@@ -512,7 +500,7 @@ public class EPLiteClient {
     public void deletePad(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        this.post("deletePad", args);
+        this.connection.post("deletePad", args);
     }
 
     /**
@@ -524,7 +512,7 @@ public class EPLiteClient {
     public HashMap getReadOnlyID(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getReadOnlyID", args);
+        return this.connection.get("getReadOnlyID", args);
     }
 
     /**
@@ -536,7 +524,7 @@ public class EPLiteClient {
     public HashMap getLastEdited(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getLastEdited", args);
+        return this.connection.get("getLastEdited", args);
     }
 
     /**
@@ -548,7 +536,7 @@ public class EPLiteClient {
     public Integer padUsersCount(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        String userCount = this.get("padUsersCount", args).get("padUsersCount").toString();
+        String userCount = this.connection.get("padUsersCount", args).get("padUsersCount").toString();
         return Integer.parseInt(userCount);
     }
     
@@ -562,7 +550,7 @@ public class EPLiteClient {
     public HashMap padUsers(String padId) {
     	HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("padUsers", args);
+        return this.connection.get("padUsers", args);
     }
 
     /**
@@ -576,7 +564,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("publicStatus", publicStatus);
-        this.post("setPublicStatus", args);
+        this.connection.post("setPublicStatus", args);
     }
 
     /**
@@ -595,7 +583,7 @@ public class EPLiteClient {
     public HashMap getPublicStatus(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("getPublicStatus", args);
+        return this.connection.get("getPublicStatus", args);
     }
 
     /**
@@ -608,7 +596,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("password", password);
-        this.post("setPassword", args);
+        this.connection.post("setPassword", args);
     }
 
     /**
@@ -627,7 +615,7 @@ public class EPLiteClient {
     public HashMap isPasswordProtected(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        return this.get("isPasswordProtected", args);
+        return this.connection.get("isPasswordProtected", args);
     }
     
     /**
@@ -640,7 +628,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("padID", padId);
         args.put("msg", msg);
-        this.post("sendClientsMessage", args);
+        this.connection.post("sendClientsMessage", args);
     }
 
     /**
@@ -649,180 +637,10 @@ public class EPLiteClient {
      * @return Boolean
      */
     public Boolean isSecure() {
-        if (this.uri.getPort() == 443) {
+        if (this.connection.uri.getPort() == 443) {
             return true;
         } else {
             return false;
-        }
-    }
-
-    /**
-     * POSTs to the HTTP JSON API.
-     * 
-     * @param apiMethod the name of the API method to call
-     * @return HashMap
-     */
-    private HashMap post(String apiMethod) {
-      return this.call(apiMethod, new HashMap(), "POST");
-    }
-
-    /**
-     * POSTs to the HTTP JSON API.
-     * 
-     * @param apiMethod the name of the API method to call
-     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @return HashMap
-     */
-    private HashMap post(String apiMethod, HashMap apiArgs) {
-      return this.call(apiMethod, apiArgs, "POST");
-    }
-
-    /**
-     * GETs from the HTTP JSON API.
-     * 
-     * @param apiMethod the name of the API method to call
-     * @return HashMap
-     */
-    private HashMap get(String apiMethod) {
-      return this.call(apiMethod, new HashMap(), "GET");
-    }
-
-    /**
-     * GETs from the HTTP JSON API.
-     * 
-     * @param apiMethod the name of the API method to call
-     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @return HashMap
-     */
-    private HashMap get(String apiMethod, HashMap apiArgs) {
-      return this.call(apiMethod, apiArgs, "GET");
-    }
-
-    /**
-     * Calls the HTTP JSON API.
-     * 
-     * @param apiMethod the name of the API method to call
-     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @param httpMethod the HTTP method to use ("GET" or "POST")
-     * @return HashMap
-     */
-    private HashMap call(String apiMethod, HashMap apiArgs, String httpMethod) {
-        // Build the url params
-        String strArgs = "";
-        apiArgs.put("apikey", this.apiKey);
-        Iterator i = apiArgs.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry e = (Map.Entry)i.next();
-            Object value = e.getValue();
-            if (value != null) {
-                strArgs += e.getKey() + "=" + value;
-                if (i.hasNext()) {
-                  strArgs += "&";
-                }
-            }
-        }
-        
-        trustServerAndCertificate();
-
-        // Execute the API call
-        String path = this.uri.getPath() + "/api/" + API_VERSION + "/" + apiMethod;
-        URL url;
-        Request request;
-        try {
-            // A read (get) request
-            if (httpMethod == "GET") {
-                url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, strArgs, null).toString());
-                request = new GETRequest(url);
-            }
-            // A write (post) request
-            else if (httpMethod == "POST") {
-                url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, null, null).toString());
-                request = new POSTRequest(url, strArgs);
-            }
-            else {
-                throw new EPLiteException(httpMethod + " is not a valid HTTP method");
-            }
-            return this.handleResponse(request.send());
-        }
-        catch (EPLiteException e) {
-            throw new EPLiteException(e.getMessage());
-        }
-        catch (Exception e) {
-            throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
-        }
-    }
-    
-    /**
-     * Creates a trust manager to trust all certificates if you open a ssl connection
-     */
-	private void trustServerAndCertificate() {
-		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-		
-				public void checkClientTrusted(
-						java.security.cert.X509Certificate[] certs, String authType) {
-				}
-		
-				public void checkServerTrusted(
-						java.security.cert.X509Certificate[] certs, String authType) {
-				}
-			}
-		};
-
-		// Install the all-trusting trust manager
-		try {
-			SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} catch (Exception e) {
-		}
-
-		HostnameVerifier hv = new HostnameVerifier() {
-			@Override
-			public boolean verify(String hostname, SSLSession session) {
-				return true;
-			}
-		};
-		HttpsURLConnection.setDefaultHostnameVerifier(hv);
-	}
-
-    /**
-     * Converts the API resonse's JSON string into a HashMap.
-     * 
-     * @param jsonString a valid JSON string
-     * @return HashMap
-     */
-    public HashMap handleResponse(String jsonString) {
-        try {
-            JSONObject json = new JSONObject(jsonString);
-            // Act on the response code
-            if (!json.get("code").equals(null)) {
-                switch ((Integer)json.get("code")) {
-                    // Valid code, parse the response
-                    case CODE_OK:
-                        if (!json.get("data").equals(null)) {
-                            return new JSONResponse(json.get("data").toString()).toHashMap();
-                        } else {
-                            return new HashMap();
-                        }
-                    // Invalid code, throw an exception with the message
-                    case CODE_INVALID_PARAMETERS:
-                    case CODE_INVALID_API_KEY:
-                    case CODE_INVALID_METHOD:
-                        throw new EPLiteException((String)json.get("message"));
-                    default:
-                        throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
-                }
-            // No response code, something's really wrong
-            } else {
-                throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
-            }
-        } catch (JSONException e) {
-            System.err.println("Unable to parse JSON response (" + jsonString + "): " + e.getMessage());
-            return new HashMap();
         }
     }
 }
