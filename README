@@ -9,7 +9,7 @@ DOWNLOADS
 You may download pre-compiled .jar files from http://jordanhollinger.com/etherpad-lite-java-client
 
 NOTES
-HEAD currently targets Etherpad Lite API v1.2. The plan is to keep up with the most recent version of the Etherpad Lite API. (Note that we're talking about API versions here, not release versions).
+HEAD currently targets Etherpad Lite API v1.2.1. The plan is to keep up with the most recent version of the Etherpad Lite API. (Note that we're talking about API versions here, not release versions).
 
 EXAMPLES
 
