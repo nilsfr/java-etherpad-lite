@@ -9,16 +9,17 @@ public class EPLiteTest {
 		tester.run();
 	}
 
-	EPLiteTest(String url, String api_key) {
-		client = new EPLiteClient(url, api_key);
+	EPLiteTest(String url, String apiKey) {
+		client = new EPLiteClient(url, apiKey);
 	}
 
 	public void run() {
-		this.print_result(this.test_pads());
+		this.print(this.testPadContents());
+		this.print(this.testListAllPads());
 		System.out.print("\n");
 	}
 
-	private boolean test_pads() {
+	private boolean testPadContents() {
 		client.createPad("java_test_pad");
 		client.setText("java_test_pad", "foo!!!");
 		HashMap pad = client.getText("java_test_pad");
@@ -28,7 +29,18 @@ public class EPLiteTest {
 		return text.equals("foo!!!\n");
 	}
 
-	private void print_result(boolean passed) {
+	private boolean testListAllPads() {
+		client.createPad("java_test_pad_1");
+		client.createPad("java_test_pad_2");
+		HashMap result = client.listAllPads();
+		client.deletePad("java_test_pad_1");
+		client.deletePad("java_test_pad_2");
+
+		String[] padIDs = (String[]) result.get("padIDs");
+		return padIDs[0].equals("java_test_pad_1");
+	}
+
+	private void print(boolean passed) {
 		if ( passed ) {
 			System.out.print(".");
 		} else {

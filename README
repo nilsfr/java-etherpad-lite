@@ -13,6 +13,11 @@ HEAD currently targets Etherpad Lite API v1.2. The plan is to keep up with the m
 
 EXAMPLES
 
-EPLiteClient api = new EPLiteClient("http://etherpad.mysite.com", "FJ7jksalksdfj83jsdflkj");
-HashMap pad = api.getText("my_pad");
-String text = pad.get("text").toString(); 
+EPLiteClient client = new EPLiteClient("http://etherpad.mysite.com", "FJ7jksalksdfj83jsdflkj");
+
+# Get pad text
+String text = client.getText("my_pad").get("text").toString(); 
+
+# Get array of all pad ids
+HashMap result = client.listAllPads();
+String[] padIds = (String[]) result.get("padIDs");

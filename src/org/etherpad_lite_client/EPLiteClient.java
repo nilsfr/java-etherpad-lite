@@ -34,7 +34,7 @@ public class EPLiteClient {
     /**
      * The Etherpad Lite API version this client targets by default
      */
-    public static final String DEFAULT_API_VERSION = "1.2";
+    public static final String DEFAULT_API_VERSION = "1.2.1";
 
     /**
      * The connection object
@@ -357,6 +357,15 @@ public class EPLiteClient {
     }
 
     // Pad content
+
+    /**
+     * Returns a list of all pads.
+     * 
+     * @return HashMap
+     */
+    public HashMap listAllPads() {
+        return this.connection.get("listAllPads");
+    }
 
     /**
      * Returns a HashMap containing the latest revision of the pad's text.
