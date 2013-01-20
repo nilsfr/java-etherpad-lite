@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.etherpad_lite_client;
+package src.org.etherpad_lite_client;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.etherpad_lite_client;
+package src.org.etherpad_lite_client;
 
-import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Iterator;
-import org.json.*;
+
+import src.org.json.JSONArray;
+import src.org.json.JSONException;
+import src.org.json.JSONObject;
 
 /**
  * Uses org.json (json.org/java) to convert JSON strings to JSONObject and JSONArray objects,
