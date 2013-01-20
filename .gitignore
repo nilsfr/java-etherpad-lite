@@ -1,4 +1,5 @@
 src/org/**/*.class
+src/org/json
 test/*.class
 test/*.jar
 *.ipr

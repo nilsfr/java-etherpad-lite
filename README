@@ -5,6 +5,9 @@ See https://github.com/ether/etherpad-lite for information on how to install and
 DOCUMENTATION
 For now, the best documentation is reading through the methods available in the EPLiteClient class: https://raw.github.com/jhollinger/java-etherpad-lite/master/src/org/etherpad_lite_client/EPLiteClient.java. The methods are 1:1 with the EPLite API methods.
 
+DEPENDENCIES
+Depends on JSON.simple - http://code.google.com/p/json-simple/. Tested against version 1.1.1.
+
 DOWNLOADS
 You may download pre-compiled .jar files from http://jordanhollinger.com/etherpad-lite-java-client
 
@@ -18,6 +21,6 @@ EPLiteClient client = new EPLiteClient("http://etherpad.mysite.com", "FJ7jksalks
 # Get pad text
 String text = client.getText("my_pad").get("text").toString(); 
 
-# Get array of all pad ids
+# Get list of all pad ids
 HashMap result = client.listAllPads();
-String[] padIds = (String[]) result.get("padIDs");
+List padIds = (List) result.get("padIDs");

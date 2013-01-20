@@ -1,4 +1,5 @@
 import org.etherpad_lite_client.*;
+import java.util.List;
 import java.util.HashMap;
 
 public class EPLiteTest {
@@ -36,8 +37,8 @@ public class EPLiteTest {
 		client.deletePad("java_test_pad_1");
 		client.deletePad("java_test_pad_2");
 
-		String[] padIDs = (String[]) result.get("padIDs");
-		return padIDs[0].equals("java_test_pad_1");
+		List padIDs = (List) result.get("padIDs");
+		return padIDs.get(0).equals("java_test_pad_1");
 	}
 
 	private void print(boolean passed) {

@@ -29,7 +29,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.json.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Connection object for talking to and parsing responses from the Etherpad Lite Server.
@@ -148,22 +149,21 @@ public class EPLiteConnection {
      */
     private HashMap handleResponse(String jsonString) {
         try {
-            JSONObject json = new JSONObject(jsonString);
+            JSONParser parser = new JSONParser();
+            Map response = (Map) parser.parse(jsonString);
             // Act on the response code
-            if (!json.get("code").equals(null)) {
-                switch ((Integer)json.get("code")) {
+            if (!response.get("code").equals(null))  {
+                int code = ((Long) response.get("code")).intValue();
+                switch ( code ) {
                     // Valid code, parse the response
                     case CODE_OK:
-                        if (!json.get("data").equals(null)) {
-                            return new JSONResponse(json.get("data").toString()).toHashMap();
-                        } else {
-                            return new HashMap();
-                        }
+                        HashMap data = (HashMap) response.get("data");
+                        return data != null ? data: new HashMap();
                     // Invalid code, throw an exception with the message
                     case CODE_INVALID_PARAMETERS:
                     case CODE_INVALID_API_KEY:
                     case CODE_INVALID_METHOD:
-                        throw new EPLiteException((String)json.get("message"));
+                        throw new EPLiteException((String)response.get("message"));
                     default:
                         throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
                 }
@@ -171,7 +171,7 @@ public class EPLiteConnection {
             } else {
                 throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
             }
-        } catch (JSONException e) {
+        } catch (ParseException e) {
             System.err.println("Unable to parse JSON response (" + jsonString + "): " + e.getMessage());
             return new HashMap();
         }

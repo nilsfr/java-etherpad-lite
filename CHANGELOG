@@ -3,6 +3,7 @@
 * Add an optional third constructor argument for the api version
 * Refactoring
 * Added tests
+* Added dependency on JSON.simple - http://code.google.com/p/json-simple/
 
 ** RELEASE 1.1.0 (2013-01-17) **
 
