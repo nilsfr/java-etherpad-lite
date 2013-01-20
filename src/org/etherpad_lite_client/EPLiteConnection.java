@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.etherpad_lite_client;
+package src.org.etherpad_lite_client;
 
 import java.net.URI;
 import java.net.URL;
@@ -29,7 +29,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.json.*;
+import src.org.json.*;
 
 /**
  * Connection object for talking to and parsing responses from the Etherpad Lite Server.

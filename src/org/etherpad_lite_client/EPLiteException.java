@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.etherpad_lite_client;
+package src.org.etherpad_lite_client;
 
 public class EPLiteException extends RuntimeException {
     public EPLiteException(String msg) {

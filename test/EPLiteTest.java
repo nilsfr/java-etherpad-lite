@@ -1,5 +1,8 @@
-import org.etherpad_lite_client.*;
+package test;
+
 import java.util.HashMap;
+
+import src.org.etherpad_lite_client.*;
 
 public class EPLiteTest {
 	private EPLiteClient client;
