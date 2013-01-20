@@ -1,9 +1,0 @@
-The test script will compile everything and run the tests. Pass the test url and api key.
-
-DEPENDENCIES
-
-You must download json-simple.jar from http://code.google.com/p/json-simple/ into the test directory. Only version 1.1.1 has been tested - http://code.google.com/p/json-simple/downloads/detail?name=json-simple-1.1.1.jar&can=2&q=
-
-EXAMPLE
-
-./test http://localhost:9001 Akkjlasdf8924jasdjja8

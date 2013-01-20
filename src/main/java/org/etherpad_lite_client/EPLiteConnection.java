@@ -255,7 +255,7 @@ public class EPLiteConnection {
 		}
 
 		HostnameVerifier hv = new HostnameVerifier() {
-			@Override
+			//@Override
 			public boolean verify(String hostname, SSLSession session) {
 				return true;
 			}

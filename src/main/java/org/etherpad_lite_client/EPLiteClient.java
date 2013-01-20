@@ -254,7 +254,7 @@ public class EPLiteClient {
         HashMap args = new HashMap();
         args.put("groupID", groupID);
         args.put("authorID", authorID);
-        args.put("validUntil", validUntil);
+        args.put("validUntil", String.valueOf(validUntil));
         return this.connection.post("createSession", args);
     }
 
@@ -540,13 +540,13 @@ public class EPLiteClient {
      * Get the number of users currently editing a pad.
      * 
      * @param padId the pad's id string
-     * @return Integer
+     * @return Long
      */
-    public Integer padUsersCount(String padId) {
+    public Long padUsersCount(String padId) {
         HashMap args = new HashMap();
         args.put("padID", padId);
-        String userCount = this.connection.get("padUsersCount", args).get("padUsersCount").toString();
-        return Integer.parseInt(userCount);
+        Long userCount = (Long) this.connection.get("padUsersCount", args).get("padUsersCount");
+        return userCount;
     }
     
     /**
@@ -643,9 +643,9 @@ public class EPLiteClient {
     /**
      * Returns true if the connection is using SSL/TLS, false if not.
      * 
-     * @return Boolean
+     * @return boolean
      */
-    public Boolean isSecure() {
+    public boolean isSecure() {
         if (this.connection.uri.getPort() == 443) {
             return true;
         } else {

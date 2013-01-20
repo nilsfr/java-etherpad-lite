@@ -1,7 +1,4 @@
-src/org/**/*.class
-src/org/json
-test/*.class
-test/*.jar
+target/
 *.ipr
 *.iws
 *.iml
