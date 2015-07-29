@@ -15,10 +15,7 @@ import java.io.InputStreamReader;
  * </code>
  */
 public class GETRequest implements Request {
-    /**
-     * The URL object.
-     */
-    private URL url;
+    private final URL url;
 
     /**
      * Instantiates a new GETRequest.

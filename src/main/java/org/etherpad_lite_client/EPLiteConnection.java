@@ -2,6 +2,8 @@ package org.etherpad_lite_client;
 
 import java.net.URI;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,17 +31,17 @@ public class EPLiteConnection {
     /**
      * The url of the API
      */
-    public URI uri;
+    public final URI uri;
 
     /**
      * The API key
      */
-    public String apiKey;
+    public final String apiKey;
 
     /**
      * The Etherpad Lite API version
      */
-    public String apiVersion;
+    public final String apiVersion;
 
     /**
      * Initializes a new org.etherpad_lite_client.EPLiteConnection object.
@@ -61,7 +63,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap get(String apiMethod) {
-        return this.get(apiMethod, new HashMap());
+        return this.get(apiMethod, new HashMap<String,Object>());
     }
 
     /**
@@ -71,7 +73,7 @@ public class EPLiteConnection {
      * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
      * @return HashMap
      */
-    public HashMap get(String apiMethod, HashMap apiArgs) {
+    public HashMap get(String apiMethod, HashMap<String,Object> apiArgs) {
         String path = this.apiPath(apiMethod);
         String query = this.queryString(apiArgs);
         URL url = apiUrl(path, query);
@@ -86,7 +88,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap post(String apiMethod) {
-        return this.post(apiMethod, new HashMap());
+        return this.post(apiMethod, new HashMap<String,Object>());
     }
 
     /**
@@ -96,7 +98,7 @@ public class EPLiteConnection {
      * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
      * @return HashMap
      */
-    public HashMap post(String apiMethod, HashMap apiArgs) {
+    public HashMap post(String apiMethod, HashMap<String,Object> apiArgs) {
         String path = this.apiPath(apiMethod);
         String query = this.queryString(apiArgs);
         URL url = apiUrl(path, null);
@@ -136,7 +138,7 @@ public class EPLiteConnection {
             JSONParser parser = new JSONParser();
             Map response = (Map) parser.parse(jsonString);
             // Act on the response code
-            if (!response.get("code").equals(null))  {
+            if (response.get("code") != null)  {
                 int code = ((Long) response.get("code")).intValue();
                 switch ( code ) {
                     // Valid code, parse the response
@@ -170,8 +172,7 @@ public class EPLiteConnection {
      */
     private URL apiUrl(String path, String query) {
         try {
-            URL url = new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, query, null).toString());
-            return url;
+            return new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, query, null).toString());
         } catch (Exception e) {
             throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
         }
@@ -193,7 +194,7 @@ public class EPLiteConnection {
      * @param apiArgs the api arguments in a HashMap
      * @return String
      */
-    private String queryString(HashMap apiArgs) {
+    private String queryString(HashMap<String,Object> apiArgs) {
         String strArgs = "";
         apiArgs.put("apikey", this.apiKey);
         Iterator i = apiArgs.entrySet().iterator();
@@ -235,8 +236,9 @@ public class EPLiteConnection {
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} catch (Exception e) {
-		}
+		} catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new EPLiteException("Unable to create SSL context", e);
+        }
 
 		HostnameVerifier hv = new HostnameVerifier() {
 			//@Override
