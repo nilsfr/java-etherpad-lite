@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 public class EPLiteException extends RuntimeException {
     public EPLiteException(String message) {

@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 import java.net.URL;
 import java.net.URLConnection;

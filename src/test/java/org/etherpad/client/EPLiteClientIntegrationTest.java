@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 import java.util.List;
 import java.util.HashMap;
