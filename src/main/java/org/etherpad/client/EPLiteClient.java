@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createGroupIfNotExistsFor(String groupMapper) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupMapper", groupMapper);
         return this.connection.post("createGroupIfNotExistsFor", args);
     }
@@ -79,7 +79,7 @@ public class EPLiteClient {
      * @param groupID string
      */
     public void deleteGroup(String groupID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         this.connection.post("deleteGroup", args);
     }
@@ -91,7 +91,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listPads(String groupID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         return this.connection.get("listPads", args);
     }
@@ -103,7 +103,7 @@ public class EPLiteClient {
      * @param padName string
      */
     public HashMap createGroupPad(String groupID, String padName) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         args.put("padName", padName);
         return this.connection.post("createGroupPad", args);
@@ -117,7 +117,7 @@ public class EPLiteClient {
      * @param text string
      */
     public void createGroupPad(String groupID, String padName, String text) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         args.put("padName", padName);
         args.put("text", text);
@@ -152,7 +152,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createAuthor(String name) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("name", name);
         return this.connection.post("createAuthor", args);
     }
@@ -165,7 +165,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createAuthorIfNotExistsFor(String authorMapper) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("authorMapper", authorMapper);
         return this.connection.post("createAuthorIfNotExistsFor", args);
     }
@@ -179,7 +179,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createAuthorIfNotExistsFor(String authorMapper, String name) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("authorMapper", authorMapper);
         args.put("name", name);
         return this.connection.post("createAuthorIfNotExistsFor", args);
@@ -192,7 +192,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listPadsOfAuthor(String authorId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("authorID", authorId);
         return this.connection.get("listPadsOfAuthor", args);
     }
@@ -204,7 +204,7 @@ public class EPLiteClient {
      * @return String
      */
     public String getAuthorName(String authorId) {
-    	HashMap args = new HashMap();
+    	HashMap<String,Object> args = new HashMap<>();
     	args.put("authorID", authorId);
     	return this.connection.get("getAuthorName", args).toString();
     }
@@ -235,7 +235,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap createSession(String groupID, String authorID, long validUntil) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         args.put("authorID", authorID);
         args.put("validUntil", String.valueOf(validUntil));
@@ -255,11 +255,11 @@ public class EPLiteClient {
      * 
      * @param groupID string
      * @param authorID string
-     * @param validUntil int length of session in hours
+     * @param sessionDuration int duration of session in hours
      * @return HashMap
      */
-    public HashMap createSession(String groupID, String authorID, int length) {
-        long inNHours = ((new Date()).getTime() + ((long)length * 60L * 60L * 1000L)) / 1000L;
+    public HashMap createSession(String groupID, String authorID, int sessionDuration) {
+        long inNHours = ((new Date()).getTime() + ((long)sessionDuration * 60L * 60L * 1000L)) / 1000L;
         return this.createSession(groupID, authorID, inNHours);
     }
 
@@ -297,7 +297,7 @@ public class EPLiteClient {
      * @param sessionID string
      */
     public void deleteSession(String sessionID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("sessionID", sessionID);
         this.connection.post("deleteSession", args);
     }
@@ -309,7 +309,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getSessionInfo(String sessionID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("sessionID", sessionID);
         return this.connection.get("getSessionInfo", args);
     }
@@ -322,7 +322,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listSessionsOfGroup(String groupID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("groupID", groupID);
         return this.connection.get("listSessionsOfGroup", args);
     }
@@ -335,7 +335,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listSessionsOfAuthor(String authorID) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("authorID", authorID);
         return this.connection.get("listSessionsOfAuthor", args);
     }
@@ -359,7 +359,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getText(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getText", args);
     }
@@ -373,9 +373,9 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getText(String padId, int rev) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
-        args.put("rev", new Integer(rev));
+        args.put("rev", rev);
         return this.connection.get("getText", args);
     }
 
@@ -386,7 +386,7 @@ public class EPLiteClient {
      * @param text the pad's new text
      */
     public void setText(String padId, String text) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("text", text);
         this.connection.post("setText", args);
@@ -400,7 +400,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getHTML(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getHTML", args);
     }
@@ -414,9 +414,9 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getHTML(String padId, int rev) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
-        args.put("rev", new Integer(rev));
+        args.put("rev", rev);
         return this.connection.get("getHTML", args);
     }
 
@@ -427,7 +427,7 @@ public class EPLiteClient {
      * @param html the pad's new html text
      */
     public void setHTML(String padId, String html) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("html", html);
         this.connection.post("setHTML", args);
@@ -443,7 +443,7 @@ public class EPLiteClient {
      * @param padId the pad's id string
      */
     public void createPad(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         this.connection.post("createPad", args);
     }
@@ -455,7 +455,7 @@ public class EPLiteClient {
      * @param text the initial text string
      */
     public void createPad(String padId, String text) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("text", text);
         this.connection.post("createPad", args);
@@ -468,7 +468,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getRevisionsCount(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getRevisionsCount", args);
     }
@@ -480,7 +480,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap listAuthorsOfPad(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("listAuthorsOfPad", args);
     }
@@ -491,7 +491,7 @@ public class EPLiteClient {
      * @param padId the pad's id string
      */
     public void deletePad(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         this.connection.post("deletePad", args);
     }
@@ -503,7 +503,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getReadOnlyID(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getReadOnlyID", args);
     }
@@ -515,7 +515,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getLastEdited(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getLastEdited", args);
     }
@@ -527,10 +527,9 @@ public class EPLiteClient {
      * @return Long
      */
     public Long padUsersCount(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
-        Long userCount = (Long) this.connection.get("padUsersCount", args).get("padUsersCount");
-        return userCount;
+        return (Long) this.connection.get("padUsersCount", args).get("padUsersCount");
     }
     
     /**
@@ -541,7 +540,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap padUsers(String padId) {
-    	HashMap args = new HashMap();
+    	HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("padUsers", args);
     }
@@ -554,7 +553,7 @@ public class EPLiteClient {
      * @param publicStatus boolean
      */
     public void setPublicStatus(String padId, Boolean publicStatus) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("publicStatus", publicStatus);
         this.connection.post("setPublicStatus", args);
@@ -574,7 +573,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap getPublicStatus(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("getPublicStatus", args);
     }
@@ -586,7 +585,7 @@ public class EPLiteClient {
      * @param password string
      */
     public void setPassword(String padId, String password) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("password", password);
         this.connection.post("setPassword", args);
@@ -606,7 +605,7 @@ public class EPLiteClient {
      * @return HashMap
      */
     public HashMap isPasswordProtected(String padId) {
-        HashMap args = new HashMap();
+        HashMap<String, Object> args = new HashMap<>();
         args.put("padID", padId);
         return this.connection.get("isPasswordProtected", args);
     }
@@ -614,11 +613,11 @@ public class EPLiteClient {
     /**
      * Sends a custom message of type msg to the pad.
      * 
-     * @param padId
-     * @param msg
+     * @param padId the pad's id string
+     * @param msg the message to send
      */
     public void sendClientsMessage(String padId, String msg) {
-        HashMap args = new HashMap();
+        HashMap<String,Object> args = new HashMap<>();
         args.put("padID", padId);
         args.put("msg", msg);
         this.connection.post("sendClientsMessage", args);
@@ -630,10 +629,6 @@ public class EPLiteClient {
      * @return boolean
      */
     public boolean isSecure() {
-        if (this.connection.uri.getPort() == 443) {
-            return true;
-        } else {
-            return false;
-        }
+        return (this.connection.uri.getPort() == 443);
     }
 }

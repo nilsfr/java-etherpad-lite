@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 import java.net.URL;
 import java.io.BufferedReader;
@@ -15,10 +15,7 @@ import java.io.InputStreamReader;
  * </code>
  */
 public class GETRequest implements Request {
-    /**
-     * The URL object.
-     */
-    private URL url;
+    private final URL url;
 
     /**
      * Instantiates a new GETRequest.

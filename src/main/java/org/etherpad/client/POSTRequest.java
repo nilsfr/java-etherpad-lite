@@ -1,4 +1,4 @@
-package org.etherpad_lite_client;
+package org.etherpad.client;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,21 +17,18 @@ import java.io.OutputStreamWriter;
  * </code>
  */
 public class POSTRequest implements Request {
-    /**
-     * The URL object.
-     */
-    private URL url;
+    private final URL url;
+    private final String body;
 
     /**
      * Instantiates a new POSTRequest.
-     * 
+     *
      * @param url the URL object
+     * @param body url-encoded (application/x-www-form-urlencoded) request body
      */
-    private String args;
-
-    public POSTRequest(URL url, String args) {
+    public POSTRequest(URL url, String body) {
         this.url = url;
-        this.args = args;
+        this.body = body;
     }
 
     /**
@@ -44,7 +41,7 @@ public class POSTRequest implements Request {
         con.setDoOutput(true);
 
         OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
-        out.write(this.args);
+        out.write(this.body);
         out.close();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
