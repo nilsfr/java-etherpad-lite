@@ -1,6 +1,8 @@
 package net.gjerull.etherpad.client;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -51,6 +53,9 @@ public class EPLiteConnection {
      * @param apiVersion the API version
      */
     public EPLiteConnection(String url, String apiKey, String apiVersion) {
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length()-1);
+        }
         this.uri = URI.create(url);
         this.apiKey = apiKey;
         this.apiVersion = apiVersion;
@@ -60,10 +65,21 @@ public class EPLiteConnection {
      * GETs from the HTTP JSON API.
      * 
      * @param apiMethod the name of the API method to call
-     * @return HashMap
+     * @return Object
      */
-    public HashMap get(String apiMethod) {
-        return this.get(apiMethod, new HashMap<String, Object>());
+    public Object getObject(String apiMethod) {
+        return this.getObject(apiMethod, new HashMap<String, Object>());
+    }
+
+    /**
+     * GETs from the HTTP JSON API.
+     *
+     * @param apiMethod the name of the API method to call
+     * @return Map
+     */
+    public Map get(String apiMethod) {
+        Map response = (Map) this.getObject(apiMethod);
+        return (response != null) ? response : new HashMap();
     }
 
     /**
@@ -71,9 +87,9 @@ public class EPLiteConnection {
      * 
      * @param apiMethod the name of the API method to call
      * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @return HashMap
+     * @return Object
      */
-    public HashMap get(String apiMethod, HashMap<String,Object> apiArgs) {
+    public Object getObject(String apiMethod, Map<String, Object> apiArgs) {
         String path = this.apiPath(apiMethod);
         String query = this.queryString(apiArgs);
         URL url = apiUrl(path, query);
@@ -82,13 +98,36 @@ public class EPLiteConnection {
     }
 
     /**
+     * GETs from the HTTP JSON API.
+     *
+     * @param apiMethod the name of the API method to call
+     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
+     * @return Map
+     */
+    public Map get(String apiMethod, Map<String,Object> apiArgs) {
+        Map response = (Map) this.getObject(apiMethod, apiArgs);
+        return (response != null) ? response : new HashMap();
+    }
+
+    /**
      * POSTs to the HTTP JSON API.
      * 
      * @param apiMethod the name of the API method to call
-     * @return HashMap
+     * @return Object
      */
-    public HashMap post(String apiMethod) {
-        return this.post(apiMethod, new HashMap<String, Object>());
+    public Object postObject(String apiMethod) {
+        return this.postObject(apiMethod, new HashMap<String, Object>());
+    }
+
+    /**
+     * POSTs to the HTTP JSON API.
+     *
+     * @param apiMethod the name of the API method to call
+     * @return Map
+     */
+    public Map post(String apiMethod) {
+        Map response = (Map) this.postObject(apiMethod);
+        return (response != null) ? response : new HashMap();
     }
 
     /**
@@ -96,9 +135,9 @@ public class EPLiteConnection {
      * 
      * @param apiMethod the name of the API method to call
      * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
-     * @return HashMap
+     * @return Object
      */
-    public HashMap post(String apiMethod, HashMap<String,Object> apiArgs) {
+    public Object postObject(String apiMethod, Map<String, Object> apiArgs) {
         String path = this.apiPath(apiMethod);
         String query = this.queryString(apiArgs);
         URL url = apiUrl(path, null);
@@ -107,33 +146,24 @@ public class EPLiteConnection {
     }
 
     /**
-     * Calls the HTTP JSON API.
-     * 
-     * @param request the request object to send
-     * @return HashMap
+     * POSTs to the HTTP JSON API.
+     *
+     * @param apiMethod the name of the API method to call
+     * @param apiArgs a HashMap of url/form parameters. apikey will be set automatically
+     * @return Map
      */
-    private HashMap call(Request request) {
-        trustServerAndCertificate();
-
-        try {
-            String response = request.send();
-            return this.handleResponse(response);
-        }
-        catch (EPLiteException e) {
-            throw new EPLiteException(e.getMessage());
-        }
-        catch (Exception e) {
-            throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
-        }
+    public Map post(String apiMethod, Map<String,Object> apiArgs) {
+        Map response = (Map) this.postObject(apiMethod, apiArgs);
+        return (response != null) ? response : new HashMap();
     }
 
     /**
-     * Converts the API resonse's JSON string into a HashMap.
-     * 
+     * Handle error condition and returns the parsed content
+     *
      * @param jsonString a valid JSON string
-     * @return HashMap
+     * @return Object
      */
-    private HashMap handleResponse(String jsonString) {
+    protected Object handleResponse(String jsonString) {
         try {
             JSONParser parser = new JSONParser();
             Map response = (Map) parser.parse(jsonString);
@@ -143,23 +173,22 @@ public class EPLiteConnection {
                 switch ( code ) {
                     // Valid code, parse the response
                     case CODE_OK:
-                        HashMap data = (HashMap) response.get("data");
-                        return data != null ? data: new HashMap();
+                        return response.get("data");
                     // Invalid code, throw an exception with the message
                     case CODE_INVALID_PARAMETERS:
-                    case CODE_INVALID_API_KEY:
+                    case CODE_INTERNAL_ERROR:
                     case CODE_INVALID_METHOD:
+                    case CODE_INVALID_API_KEY:
                         throw new EPLiteException((String)response.get("message"));
                     default:
                         throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
                 }
             // No response code, something's really wrong
             } else {
-                throw new EPLiteException("An unknown error has occurred while handling the response: " + jsonString);
+                throw new EPLiteException("An unexpected response from the server: " + jsonString);
             }
         } catch (ParseException e) {
-            System.err.println("Unable to parse JSON response (" + jsonString + "): " + e.getMessage());
-            return new HashMap();
+            throw new EPLiteException("Unable to parse JSON response (" + jsonString + ")", e);
         }
     }
 
@@ -170,11 +199,11 @@ public class EPLiteConnection {
      * @param query the query string (may be null)
      * @return URL
      */
-    private URL apiUrl(String path, String query) {
+    protected URL apiUrl(String path, String query) {
         try {
             return new URL(new URI(this.uri.getScheme(), null, this.uri.getHost(), this.uri.getPort(), path, query, null).toString());
-        } catch (Exception e) {
-            throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new EPLiteException("Error in the URL to the Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
         }
     }
 
@@ -184,7 +213,7 @@ public class EPLiteConnection {
      * @param apiMethod the api method
      * @return String
      */
-    private String apiPath(String apiMethod) {
+    protected String apiPath(String apiMethod) {
         return this.uri.getPath() + "/api/" + this.apiVersion + "/" + apiMethod;
     }
 
@@ -194,7 +223,7 @@ public class EPLiteConnection {
      * @param apiArgs the api arguments in a HashMap
      * @return String
      */
-    private String queryString(HashMap<String,Object> apiArgs) {
+    protected String queryString(Map<String,Object> apiArgs) {
         String strArgs = "";
         apiArgs.put("apikey", this.apiKey);
         Iterator i = apiArgs.entrySet().iterator();
@@ -212,6 +241,27 @@ public class EPLiteConnection {
     }
 
     /**
+     * Calls the HTTP JSON API.
+     *
+     * @param request the request object to send
+     * @return HashMap
+     */
+    private Object call(Request request) {
+        trustServerAndCertificate();
+
+        try {
+            String response = request.send();
+            return this.handleResponse(response);
+        }
+        catch (EPLiteException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new EPLiteException("Unable to connect to Etherpad Lite instance (" + e.getClass() + "): " + e.getMessage());
+        }
+    }
+
+    /**
      * Creates a trust manager to trust all certificates if you open a ssl connection
      */
 	private void trustServerAndCertificate() {
@@ -220,11 +270,11 @@ public class EPLiteConnection {
 				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 					return null;
 				}
-		
+
 				public void checkClientTrusted(
 						java.security.cert.X509Certificate[] certs, String authType) {
 				}
-		
+
 				public void checkServerTrusted(
 						java.security.cert.X509Certificate[] certs, String authType) {
 				}
