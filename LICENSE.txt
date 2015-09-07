@@ -1,4 +1,5 @@
-Copyright 2011 Jordan Hollinger
+Copyright 2015 Nils Fredrik Gjerull (nils@gjerull.net)
+Copyright 2011 Jordan Hollinger (jordan.hollinger@gmail.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
