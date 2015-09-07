@@ -1,4 +1,4 @@
-package org.etherpad.client;
+package net.gjerull.etherpad.client;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class EPLiteClient {
     public EPLiteConnection connection;
 
     /**
-     * Initializes a new org.etherpad_lite_client.EPLiteClient object.
+     * Initializes a new net.gjerull.etherpad.client.EPLiteClient object.
      * The default Etherpad Lite API version (in DEFAULT_API_VERSION) will be used.
      *
      * @param url an absolute url, including protocol, to the EPL api

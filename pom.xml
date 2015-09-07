@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.etherpad</groupId>
+  <groupId>net.gjerull.etherpad</groupId>
   <artifactId>etherpad_lite_client</artifactId>
   <version>1.2.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -12,7 +12,7 @@
     A Java client for Etherpad Lite’s HTTP JSON API.
     Etherpad Lite is a collaborative editor provided by the Etherpad Foundation.
   </description>
-  <url>http://github.com/jhollinger/java-etherpad-lite</url>
+  <url>http://github.com/nilsfr/java-etherpad-lite</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,20 +28,20 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/jhollinger/java-etherpad-lite/</url>
-    <connection>scm:git:https://github.com/jhollinger/java-etherpad-lite.git</connection>
-    <developerConnection>scm:git:git@github.com:jhollinger/java-etherpad-lite.git</developerConnection>
+    <url>https://github.com/nilsfr/java-etherpad-lite/</url>
+    <connection>scm:git:https://github.com/nilsfr/java-etherpad-lite.git</connection>
+    <developerConnection>scm:git:git@github.com:nilsfr/java-etherpad-lite.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <developers>
     <developer>
-      <id>jhollinger</id>
-      <name>Jordan Hollinger</name>
-      <email>jordan.hollinger@gmail.com</email>
-      <organization>Consolo Services</organization>
-      <organizationUrl>https://github.com/consolo</organizationUrl>
-      <url>http://github.com/jhollinger</url>
+      <id>nilsfr</id>
+      <name>Nils Fredrik Gjerull</name>
+      <email>nils@gjerull.net</email>
+      <organization>University of Oslo</organization>
+      <organizationUrl>http://www.usit.uio.no/english/</organizationUrl>
+      <url>http://github.com/nilsfr</url>
     </developer>
   </developers>
 
@@ -104,6 +104,7 @@
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <useReleaseProfile>false</useReleaseProfile>
           <releaseProfiles>release</releaseProfiles>
+          <pushChanges>false</pushChanges>
           <goals>deploy</goals>
           <mavenExecutorId>forked-path</mavenExecutorId>
         </configuration>

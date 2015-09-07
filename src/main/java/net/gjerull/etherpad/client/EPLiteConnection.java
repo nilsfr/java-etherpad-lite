@@ -1,4 +1,4 @@
-package org.etherpad.client;
+package net.gjerull.etherpad.client;
 
 import java.net.URI;
 import java.net.URL;
@@ -63,7 +63,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap get(String apiMethod) {
-        return this.get(apiMethod, new HashMap<String,Object>());
+        return this.get(apiMethod, new HashMap<String, Object>());
     }
 
     /**
@@ -88,7 +88,7 @@ public class EPLiteConnection {
      * @return HashMap
      */
     public HashMap post(String apiMethod) {
-        return this.post(apiMethod, new HashMap<String,Object>());
+        return this.post(apiMethod, new HashMap<String, Object>());
     }
 
     /**

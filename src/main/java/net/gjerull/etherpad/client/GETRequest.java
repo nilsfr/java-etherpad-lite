@@ -1,4 +1,4 @@
-package org.etherpad.client;
+package net.gjerull.etherpad.client;
 
 import java.net.URL;
 import java.io.BufferedReader;
