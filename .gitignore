@@ -1,4 +1,6 @@
 target/
+pom.xml.releaseBackup
+release.properties
 *.ipr
 *.iws
 *.iml
