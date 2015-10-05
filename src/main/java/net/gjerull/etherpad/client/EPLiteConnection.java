@@ -46,7 +46,7 @@ public class EPLiteConnection {
     public final String apiVersion;
 
     /**
-     * Initializes a new org.etherpad_lite_client.EPLiteConnection object.
+     * Initializes a new net.gjerull.etherpad.client.EPLiteConnection object.
      *
      * @param url an absolute url, including protocol, to the EPL api
      * @param apiKey the API Key

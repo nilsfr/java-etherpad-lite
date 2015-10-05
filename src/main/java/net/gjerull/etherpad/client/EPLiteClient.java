@@ -38,7 +38,7 @@ public class EPLiteClient {
     }
 
     /**
-     * Initializes a new org.etherpad_lite_client.EPLiteClient object.
+     * Initializes a new net.gjerull.etherpad.client.EPLiteClient object.
      * The specified Etherpad Lite API version will be used.
      *
      * @param url an absolute url, including protocol, to the EPL api
