@@ -1,5 +1,7 @@
 package net.gjerull.etherpad.client;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -415,10 +417,13 @@ public class EPLiteClient {
      * @param padId the pad's id string
      * @param html the pad's new html text
      */
-    public void setHTML(String padId, String html) {
+    public void setHTML(String padId, String html) throws UnsupportedEncodingException {
+        // To fix issues with accents as reported in
+        // https://github.com/ether/etherpad-lite/issues/3184
+        String encodedHtml = URLEncoder.encode(html, "UTF-8");
         Map<String,Object> args = new HashMap<>();
         args.put("padID", padId);
-        args.put("html", html);
+        args.put("html", encodedHtml);
         this.connection.post("setHTML", args);
     }
 
