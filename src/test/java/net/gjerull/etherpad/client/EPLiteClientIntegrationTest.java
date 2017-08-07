@@ -143,7 +143,6 @@ public class EPLiteClientIntegrationTest {
 
         assertEquals(secondAuthorName, thirdAuthorName);
     }
-
     @Test
     public void create_and_delete_session() throws Exception {
         String authorMapper = "username";
@@ -169,7 +168,7 @@ public class EPLiteClientIntegrationTest {
             Map sessionInfo = client.getSessionInfo(secondSessionId);
             assertEquals(groupId, sessionInfo.get("groupID"));
             assertEquals(authorId, sessionInfo.get("authorID"));
-            assertEquals(sessionValidUntil.getTime() / 1000, (long) sessionInfo.get("validUntil"));
+            assertEquals(sessionValidUntil.getTime() / 1000L, (long) sessionInfo.get("validUntil"));
 
             Map sessionsOfGroup = client.listSessionsOfGroup(groupId);
             sessionInfo = (Map) sessionsOfGroup.get(firstSessionId);
@@ -225,6 +224,10 @@ public class EPLiteClientIntegrationTest {
                     "<span class=\"removed\">g&#229; &#229; gj&#248;r et &#230;rend</span>"
             ));
 
+            client.appendText(padID, "lagt til nå");
+            text = (String) client.getText(padID).get("text");
+            assertEquals("gå og gjøre et ærend igjen\nlagt til nå\n", text);
+
             Map attributePool = (Map) client.getAttributePool(padID).get("pool");
             assertTrue(attributePool.containsKey("attribToNum"));
             assertTrue(attributePool.containsKey("nextNum"));
@@ -239,7 +242,7 @@ public class EPLiteClientIntegrationTest {
             List savedRevisions = (List) client.listSavedRevisions(padID).get("savedRevisions");
             assertEquals(2, savedRevisions.size());
             assertEquals(2L, savedRevisions.get(0));
-            assertEquals(3L, savedRevisions.get(1));
+            assertEquals(4L, savedRevisions.get(1));
 
             long padUsersCount = (long) client.padUsersCount(padID).get("padUsersCount");
             assertEquals(0, padUsersCount);

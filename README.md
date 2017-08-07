@@ -30,7 +30,7 @@ The methods are 1:1 with the EPLite API methods.
 Depends on JSON.simple (https://github.com/fangyidong/json-simple).
 
 ### NOTES ###
-HEAD currently targets Etherpad Lite API v1.2.12.
+Latest release currently targets Etherpad Lite API v1.2.12.
 The plan is to keep up with the most recent version of the Etherpad Lite API.
 (Note that we're talking about API versions here, not release versions).
 

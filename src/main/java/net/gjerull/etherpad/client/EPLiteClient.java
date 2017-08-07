@@ -16,7 +16,7 @@ import java.util.Map;
  * </code>
  */
 public class EPLiteClient {
-    private static final String DEFAULT_API_VERSION = "1.2.12";
+    private static final String DEFAULT_API_VERSION = "1.2.13";
     private static final String DEFAULT_ENCODING = "UTF-8";
     private final EPLiteConnection connection;
 
@@ -129,7 +129,8 @@ public class EPLiteClient {
     }
 
     // Authors
-    // These authors are bound to the attributes the users choose (color and name). The author id is returned in "authorID".
+    // These authors are bound to the attributes the users choose (color and name).
+    // The author id is returned in "authorID".
 
     /**
      * Create a new author.
@@ -153,7 +154,8 @@ public class EPLiteClient {
     }
 
     /**
-     * Creates a new Author for authorMapper if one doesn't already exist. Helps you map your application's authors to Etherpad Lite's authors.
+     * Creates a new Author for authorMapper if one doesn't already exist.
+     * Helps you map your application's authors to Etherpad Lite's authors.
      * The author id is returned in "authorID".
      * 
      * @param authorMapper string
@@ -166,7 +168,8 @@ public class EPLiteClient {
     }
 
     /**
-     * Creates a new Author for authorMapper if one doesn't already exist. Helps you map your application's authors to Etherpad Lite's authors.
+     * Creates a new Author for authorMapper if one doesn't already exist.
+     * Helps you map your application's authors to Etherpad Lite's authors.
      * The author id is returned in "authorID".
      * 
      * @param authorMapper string
@@ -363,7 +366,7 @@ public class EPLiteClient {
     }
 
     /**
-     * Creates a new revision with the given text (or creates a new pad).
+     * Creates a new revision with the given text.
      * 
      * @param padId the pad's id string
      * @param text the pad's new text
@@ -373,6 +376,21 @@ public class EPLiteClient {
         args.put("padID", padId);
         args.put("text", text);
         this.connection.post("setText", args);
+    }
+
+    /**
+     * Creates a new revision with the given text appended to the existing text.
+     *
+     * API >= 1.2.13
+     *
+     * @param padId the pad's id string
+     * @param text the pad's new text
+     */
+    public void appendText(String padId, String text) {
+        Map<String,Object> args = new HashMap<>();
+        args.put("padID", padId);
+        args.put("text", text);
+        this.connection.post("appendText", args);
     }
 
     /**
@@ -404,7 +422,7 @@ public class EPLiteClient {
     }
 
     /**
-     * Creates a new revision with the given html (or creates a new pad).
+     * Creates a new revision with the given html.
      * 
      * @param padId the pad's id string
      * @param html the pad's new html text
