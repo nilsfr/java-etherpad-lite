@@ -45,12 +45,12 @@ public class POSTRequest implements Request {
         out.close();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String response = "";
+        StringBuilder response = new StringBuilder();
         String buffer;
         while ((buffer = in.readLine()) != null) {
-            response += buffer;
+            response.append(buffer);
         }
         in.close();
-        return response;
+        return response.toString();
     }
 }

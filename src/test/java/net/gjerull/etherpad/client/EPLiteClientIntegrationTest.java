@@ -22,7 +22,10 @@ public class EPLiteClientIntegrationTest {
      */
     @Before
     public void setUp() throws Exception {
-        this.client = new EPLiteClient("http://localhost:9001", "a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58");
+        this.client = new EPLiteClient(
+                "http://localhost:9001",
+                "a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+        );
     }
 
     @Test
@@ -192,13 +195,16 @@ public class EPLiteClientIntegrationTest {
         String padID = "integration-test-pad";
         client.createPad(padID);
         try {
-            client.setText(padID, "test");
+            client.setText(padID, "gå å gjør et ærend");
             String text = (String) client.getText(padID).get("text");
-            assertEquals("test\n", text);
+            assertEquals("gå å gjør et ærend\n", text);
 
-            client.setHTML(padID, "<!DOCTYPE HTML><html><body><p>test igjen</p></body></html>");
+            client.setHTML(
+                    padID,
+                   "<!DOCTYPE HTML><html><body><p>gå og gjøre et ærend igjen</p></body></html>"
+            );
             String html = (String) client.getHTML(padID).get("html");
-            assertTrue(html.contains("test igjen<br>"));
+            assertTrue(html, html.contains("g&#229; og gj&#248;re et &#230;rend igjen<br><br>"));
 
             html = (String) client.getHTML(padID, 2).get("html");
             assertEquals("<!DOCTYPE HTML><html><body><br></body></html>", html);
@@ -209,13 +215,15 @@ public class EPLiteClientIntegrationTest {
             assertEquals(3L, revisionCount);
 
             String revisionChangeset = client.getRevisionChangeset(padID);
-            assertTrue(revisionChangeset.contains("test igjen"));
+            assertTrue(revisionChangeset, revisionChangeset.contains("gå og gjøre et ærend igjen"));
 
             revisionChangeset = client.getRevisionChangeset(padID, 2);
-            assertTrue(revisionChangeset.contains("|1-5|1+1$\n"));
+            assertTrue(revisionChangeset, revisionChangeset.contains("|1-j|1+1$\n"));
 
             String diffHTML = (String) client.createDiffHTML(padID, 1, 2).get("html");
-            assertTrue(diffHTML.contains("class=\"removed\">test"));
+            assertTrue(diffHTML, diffHTML.contains(
+                    "<span class=\"removed\">g&#229; &#229; gj&#248;r et &#230;rend</span>"
+            ));
 
             Map attributePool = (Map) client.getAttributePool(padID).get("pool");
             assertTrue(attributePool.containsKey("attribToNum"));
@@ -289,16 +297,17 @@ public class EPLiteClientIntegrationTest {
     }
 
     @Test
-    public void create_pads_and_list_them() {
+    public void create_pads_and_list_them() throws InterruptedException {
         String pad1 = "integration-test-pad-1";
         String pad2 = "integration-test-pad-2";
         client.createPad(pad1);
         client.createPad(pad2);
+        Thread.sleep(100);
         List padIDs = (List) client.listAllPads().get("padIDs");
         client.deletePad(pad1);
         client.deletePad(pad2);
 
-        assertTrue(padIDs.size() >= 2);
+        assertTrue(String.format("Size was %d", padIDs.size()),padIDs.size() >= 2);
         assertTrue(padIDs.contains(pad1));
         assertTrue(padIDs.contains(pad2));
     }

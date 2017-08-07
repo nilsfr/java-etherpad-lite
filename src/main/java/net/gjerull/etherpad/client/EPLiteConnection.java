@@ -1,9 +1,7 @@
 package net.gjerull.etherpad.client;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -46,19 +44,25 @@ public class EPLiteConnection {
     public final String apiVersion;
 
     /**
+     * The character encoding of your application
+     */
+    public final String encoding;
+
+    /**
      * Initializes a new net.gjerull.etherpad.client.EPLiteConnection object.
      *
      * @param url an absolute url, including protocol, to the EPL api
      * @param apiKey the API Key
      * @param apiVersion the API version
      */
-    public EPLiteConnection(String url, String apiKey, String apiVersion) {
+    public EPLiteConnection(String url, String apiKey, String apiVersion, String encoding) {
         if (url.endsWith("/")) {
             url = url.substring(0, url.length()-1);
         }
         this.uri = URI.create(url);
         this.apiKey = apiKey;
         this.apiVersion = apiVersion;
+        this.encoding = encoding;
     }
 
     /**
@@ -91,7 +95,7 @@ public class EPLiteConnection {
      */
     public Object getObject(String apiMethod, Map<String, Object> apiArgs) {
         String path = this.apiPath(apiMethod);
-        String query = this.queryString(apiArgs);
+        String query = this.queryString(apiArgs, false);
         URL url = apiUrl(path, query);
         Request request = new GETRequest(url);
         return this.call(request);
@@ -139,7 +143,7 @@ public class EPLiteConnection {
      */
     public Object postObject(String apiMethod, Map<String, Object> apiArgs) {
         String path = this.apiPath(apiMethod);
-        String query = this.queryString(apiArgs);
+        String query = this.queryString(apiArgs, true);
         URL url = apiUrl(path, null);
         Request request = new POSTRequest(url, query);
         return this.call(request);
@@ -223,21 +227,33 @@ public class EPLiteConnection {
      * @param apiArgs the api arguments in a HashMap
      * @return String
      */
-    protected String queryString(Map<String,Object> apiArgs) {
-        String strArgs = "";
+    protected String queryString(Map<String,Object> apiArgs, boolean urlEncode) {
+        StringBuilder strArgs = new StringBuilder();
         apiArgs.put("apikey", this.apiKey);
         Iterator i = apiArgs.entrySet().iterator();
         while (i.hasNext()) {
-            Map.Entry e = (Map.Entry)i.next();
-            Object value = e.getValue();
-            if (value != null) {
-                strArgs += e.getKey() + "=" + value;
-                if (i.hasNext()) {
-                  strArgs += "&";
+            Map.Entry entry = (Map.Entry)i.next();
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            if (urlEncode) {
+                try {
+                    if (key instanceof String) {
+                        URLEncoder.encode((String) key, this.encoding);
+                    }
+                    if (value instanceof String) {
+                        value = URLEncoder.encode((String) value, this.encoding);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    throw new EPLiteException(String.format(
+                            "Unable to URLEncode using encoding '%s'", this.encoding), e);
                 }
             }
+            strArgs.append(key).append("=").append(value);
+            if (i.hasNext()) {
+                strArgs.append("&");
+            }
         }
-        return strArgs;
+        return strArgs.toString();
     }
 
     /**

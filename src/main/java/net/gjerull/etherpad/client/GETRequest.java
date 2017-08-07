@@ -33,12 +33,12 @@ public class GETRequest implements Request {
      */
     public String send() throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        String response = "";
+        StringBuilder response = new StringBuilder();
         String buffer;
         while ((buffer = in.readLine()) != null) {
-            response += buffer;
+            response.append(buffer);
         }
         in.close();
-        return response;
+        return response.toString();
     }
 }

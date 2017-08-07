@@ -16,15 +16,9 @@ import java.util.Map;
  * </code>
  */
 public class EPLiteClient {
-    /**
-     * The Etherpad Lite API version this client targets by default
-     */
-    public static final String DEFAULT_API_VERSION = "1.2.12";
-
-    /**
-     * The connection object
-     */
-    public EPLiteConnection connection;
+    private static final String DEFAULT_API_VERSION = "1.2.12";
+    private static final String DEFAULT_ENCODING = "UTF-8";
+    private final EPLiteConnection connection;
 
     /**
      * Initializes a new net.gjerull.etherpad.client.EPLiteClient object.
@@ -34,7 +28,7 @@ public class EPLiteClient {
      * @param apiKey the API Key
      */
     public EPLiteClient(String url, String apiKey) {
-        this.connection = new EPLiteConnection(url, apiKey, DEFAULT_API_VERSION);
+        this.connection = new EPLiteConnection(url, apiKey, DEFAULT_API_VERSION, DEFAULT_ENCODING);
     }
 
     /**
@@ -45,8 +39,8 @@ public class EPLiteClient {
      * @param apiKey the API Key
      * @param apiVersion the API version
      */
-    public EPLiteClient(String url, String apiKey, String apiVersion) {
-        this.connection = new EPLiteConnection(url, apiKey, apiVersion);
+    public EPLiteClient(String url, String apiKey, String apiVersion, String encoding) {
+        this.connection = new EPLiteConnection(url, apiKey, apiVersion, encoding);
     }
 
     // Groups
