@@ -3,7 +3,7 @@
 
   <groupId>net.gjerull.etherpad</groupId>
   <artifactId>etherpad_lite_client</artifactId>
-  <version>1.2.13-SNAPSHOT</version>
+  <version>1.2.13</version>
   <packaging>jar</packaging>
 
   <name>Etherpad Lite Client</name>
@@ -30,6 +30,7 @@
     <url>https://github.com/nilsfr/java-etherpad-lite/</url>
     <connection>scm:git:https://github.com/nilsfr/java-etherpad-lite.git</connection>
     <developerConnection>scm:git:git@github.com:nilsfr/java-etherpad-lite.git</developerConnection>
+    <tag>etherpad_lite_client-1.2.13</tag>
   </scm>
 
   <developers>
