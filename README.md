@@ -17,7 +17,7 @@ Add this to your maven pom:
 <dependency>
     <groupId>net.gjerull.etherpad</groupId>
     <artifactId>etherpad_lite_client</artifactId>
-    <version>1.2.12</version>
+    <version>1.2.13</version>
 </dependency>
 ```
 

@@ -1,3 +1,9 @@
+** RELEASE 1.2.13 (2017-08-07) **
+
+* Upgrade to version 1.2.13 of the Etherpad api
+* Add missing url encoding of the POST request body
+* Add integration tests for the chat API.
+
 ** RELEASE 1.2.12 (2015-10-05)**
 
 * Upgrade to version 1.2.12 of the Etherpad api
