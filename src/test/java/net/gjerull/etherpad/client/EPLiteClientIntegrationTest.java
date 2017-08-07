@@ -311,4 +311,38 @@ public class EPLiteClientIntegrationTest {
         assertTrue(padIDs.contains(pad1));
         assertTrue(padIDs.contains(pad2));
     }
+
+    @Test
+    public void create_pad_and_chat_about_it() {
+        String padID = "integration-test-pad-1";
+        String user1 = "user1";
+        String user2 = "user2";
+        Map response = client.createAuthorIfNotExistsFor(user1, "integration-author-1");
+        String author1Id = (String) response.get("authorID");
+        response = client.createAuthorIfNotExistsFor(user2, "integration-author-2");
+        String author2Id = (String) response.get("authorID");
+
+        client.createPad(padID);
+        try {
+            client.appendChatMessage(padID, "hi from user1", author1Id);
+            client.appendChatMessage(padID, "hi from user2", author2Id, System.currentTimeMillis() / 1000L);
+            client.appendChatMessage(padID, "gå å gjør et ærend", author1Id, System.currentTimeMillis() / 1000L);
+            response = client.getChatHead(padID);
+            long chatHead = (long) response.get("chatHead");
+            assertEquals(2, chatHead);
+
+            response = client.getChatHistory(padID);
+            List chatHistory = (List) response.get("messages");
+            assertEquals(3, chatHistory.size());
+            assertEquals("gå å gjør et ærend", ((Map)chatHistory.get(2)).get("text"));
+
+            response = client.getChatHistory(padID, 0, 1);
+            chatHistory = (List) response.get("messages");
+            assertEquals(2, chatHistory.size());
+            assertEquals("hi from user2", ((Map)chatHistory.get(1)).get("text"));
+        } finally {
+            client.deletePad(padID);
+        }
+
+    }
 }

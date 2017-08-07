@@ -526,6 +526,44 @@ public class EPLiteClient {
         return this.connection.get("getChatHead", args);
     }
 
+    /**
+     * Creates a chat message, saves it to the database and sends it to all
+     * connected clients of this pad, using the current time as timestamp.
+     *
+     * API >= 1.2.12
+     *
+     * @param padId the pad's id string
+     * @param text  the text of this chat entry
+     * @param authorId the author of this chat entry
+     */
+    public Map appendChatMessage(String padId, String text, String authorId) {
+        Map<String,Object> args = new HashMap<>();
+        args.put("padID", padId);
+        args.put("text", text);
+        args.put("authorID", authorId);
+        return this.connection.post("appendChatMessage", args);
+    }
+
+    /**
+     * Creates a chat message, saves it to the database and sends it to all
+     * connected clients of this pad.
+     *
+     * API >= 1.2.12
+     *
+     * @param padId the pad's id string
+     * @param text  the text of this chat entry
+     * @param authorId the author of this chat entry
+     * @param time the timestamp of this chat entry
+     */
+    public Map appendChatMessage(String padId, String text, String authorId,  long time) {
+        Map<String,Object> args = new HashMap<>();
+        args.put("padID", padId);
+        args.put("text", text);
+        args.put("authorID", authorId);
+        args.put("time", time);
+        return this.connection.post("appendChatMessage", args);
+    }
+
     // Pads
     // Group pads are normal pads, but with the name schema GROUPID$PADNAME. A security manager controls access of them and its 
     // forbidden for normal pads to include a $ in the name.
