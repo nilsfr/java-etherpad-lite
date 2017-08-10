@@ -10,7 +10,7 @@ install and configure your own Etherpad Lite instance, and read the
 Etherpad Lite’s HTTP API.
 
 ### DOWNLOAD ###
-The jar file is available in [Maven Central](http://search.maven.org/#artifactdetails|net.gjerull.etherpad|etherpad_lite_client|1.2.12|jar).
+The jar file is available in [Maven Central](http://search.maven.org/#artifactdetails|net.gjerull.etherpad|etherpad_lite_client|1.2.13|jar).
 
 Add this to your maven pom:
 ```xml
@@ -30,7 +30,7 @@ The methods are 1:1 with the EPLite API methods.
 Depends on JSON.simple (https://github.com/fangyidong/json-simple).
 
 ### NOTES ###
-Latest release currently targets Etherpad Lite API v1.2.12.
+Latest release currently targets Etherpad Lite API v1.2.13.
 The plan is to keep up with the most recent version of the Etherpad Lite API.
 (Note that we're talking about API versions here, not release versions).
 
